@@ -40,22 +40,23 @@ public class WebServiceActivity extends Activity {
 		
 		textResult.setText("Network available? " + isNetworkAvailable());
 		
-		HttpHeaders requestHeaders = new HttpHeaders();
-		List<MediaType> acceptableMedia = new ArrayList<MediaType>();
-		acceptableMedia.add(MediaType.APPLICATION_JSON);
-		
-		requestHeaders.setAccept(acceptableMedia);
-		
-		HttpEntity<?> requestEntity = new HttpEntity<Object>(requestHeaders);
-		
-		RestTemplate restTemplate = new RestTemplate();
-		restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
-		
-		ResponseEntity<Station[]> responseEntity = restTemplate.exchange("http://mtrappwebservice-alex.appspot.com/station/getAll.do", HttpMethod.GET, requestEntity, Station[].class);
- 		
-		Station[] stations = responseEntity.getBody();
-		restResult.setText("REST:" + Arrays.toString(stations));
-		
+		if (isNetworkAvailable()) {
+			HttpHeaders requestHeaders = new HttpHeaders();
+			List<MediaType> acceptableMedia = new ArrayList<MediaType>();
+			acceptableMedia.add(MediaType.APPLICATION_JSON);
+			
+			requestHeaders.setAccept(acceptableMedia);
+			
+			HttpEntity<?> requestEntity = new HttpEntity<Object>(requestHeaders);
+			
+			RestTemplate restTemplate = new RestTemplate();
+			restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
+			
+			ResponseEntity<Station[]> responseEntity = restTemplate.exchange("http://mtrappwebservice-alex.appspot.com/station/getAll.do", HttpMethod.GET, requestEntity, Station[].class);
+	 		
+			Station[] stations = responseEntity.getBody();
+			restResult.setText("REST:" + Arrays.toString(stations));
+		}
 	}
 
 	private boolean isNetworkAvailable() {
